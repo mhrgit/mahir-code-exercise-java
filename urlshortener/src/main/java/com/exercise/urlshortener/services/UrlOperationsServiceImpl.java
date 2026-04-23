@@ -1,5 +1,7 @@
 package com.exercise.urlshortener.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,5 +64,11 @@ public class UrlOperationsServiceImpl implements UrlOperationsService {
 	public boolean deleteShortUrl(String url) {
 		//TODO: check if url exists and then delete
 		return false;
+	}
+
+	@Override
+	public List<UrlEntity> getAllUrls() {
+		//TODO: implement get all urls method in repo
+		return null;
 	}
 }
