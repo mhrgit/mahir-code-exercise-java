@@ -37,9 +37,13 @@ public class UrlOperationsController {
     		ShortenResult result = service.getShortUrl(url);
     		
     		if(result.isSuccessfull()) {
-    			return new ResponseEntity<>(result.getResult(), HttpStatus.OK);
+    			return ResponseEntity.status(201)
+    					.header("description", "URL successfully shortened")
+    					.body(result.getResult());
     		} else {
-    			return new ResponseEntity<>(result.getResult(), HttpStatus.BAD_REQUEST);
+    			return ResponseEntity.status(400)
+    					.header("description", "Invalid input or alias already taken")
+    					.body(result.getResult());
     		}
     	
     	}
@@ -47,9 +51,13 @@ public class UrlOperationsController {
     	ShortenResult result = service.getShortUrl(url.getFullUrl());
 
     	if(result.isSuccessfull()) {
-    		return new ResponseEntity<>(result.getResult(), HttpStatus.OK);
+			return ResponseEntity.status(201)
+					.header("description", "URL successfully shortened")
+					.body(result.getResult());
     	} else {
-    		return new ResponseEntity<>(result.getResult(), HttpStatus.BAD_REQUEST);
+			return ResponseEntity.status(400)
+					.header("description", "Invalid input or alias already taken")
+					.body(result.getResult());
     	}
     }
 
