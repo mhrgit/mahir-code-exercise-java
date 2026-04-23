@@ -5,4 +5,4 @@ target/
 /bin/
 .DS_Store
 .metadata/
-/urlshortener/src/main/resources/application.properties
+/urlshortener/src/main/resources/
