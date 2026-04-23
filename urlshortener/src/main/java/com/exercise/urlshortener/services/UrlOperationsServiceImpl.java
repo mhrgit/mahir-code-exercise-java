@@ -57,4 +57,10 @@ public class UrlOperationsServiceImpl implements UrlOperationsService {
 		
 		return repository.getLongUrl(shortUrl);
 	}
+
+	@Override
+	public boolean deleteShortUrl(String url) {
+		//TODO: check if url exists and then delete
+		return false;
+	}
 }

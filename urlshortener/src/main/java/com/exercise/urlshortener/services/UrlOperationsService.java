@@ -8,4 +8,5 @@ public interface UrlOperationsService {
 	ShortenResult getShortUrl(String longUrl);
 	ShortenResult getShortUrl(Url url);
 	String getLongUrl(String shortUrl);
+	boolean deleteShortUrl(String url);
 }
