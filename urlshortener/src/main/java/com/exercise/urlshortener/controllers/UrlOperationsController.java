@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.exercise.urlshortener.models.ShortenResult;
 import com.exercise.urlshortener.models.Url;
+import com.exercise.urlshortener.services.UrlOperationsService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,24 +23,58 @@ import jakarta.servlet.http.HttpServletResponse;
 @RequestMapping("/urls")
 public class UrlOperationsController {
 
+	private UrlOperationsService service;
+	
+	public UrlOperationsController(UrlOperationsService service) {
+		this.service = service;
+	}
+	
     @PostMapping("/shorten")
     public ResponseEntity<Object> createShortUrl(@RequestBody Url url, HttpServletRequest request) {
-    		
-    	String shortUrl = "sampleurl";
     	
-    	//TODO: Integrate to the service
+    	if(!url.getCustomAlias().isEmpty()) {
+    		
+    		ShortenResult result = service.getShortUrl(url);
+    		
+    		if(result.isSuccessfull()) {
+    			return new ResponseEntity<>(result.getResult(), HttpStatus.OK);
+    		} else {
+    			return new ResponseEntity<>(result.getResult(), HttpStatus.BAD_REQUEST);
+    		}
+    	
+    	}
+    	
+    	ShortenResult result = service.getShortUrl(url.getFullUrl());
 
-        return new ResponseEntity<>(shortUrl, HttpStatus.OK);
+    	if(result.isSuccessfull()) {
+    		return new ResponseEntity<>(result.getResult(), HttpStatus.OK);
+    	} else {
+    		return new ResponseEntity<>(result.getResult(), HttpStatus.BAD_REQUEST);
+    	}
     }
 
     @GetMapping("/{alias}")
     public void redirectToLongUrl(HttpServletResponse response, @PathVariable String shortUrl) {
-    		//TODO: Get long url and perform redirection
     	
     	try {
-			response.sendRedirect("Long Url");
+    		
+    		String longUrl = service.getLongUrl(shortUrl);
+    		
+    		if(longUrl != null && !longUrl.isEmpty()) {
+    			response.setStatus(302);
+    			response.sendRedirect(longUrl);
+    		} else {
+    			response.sendError(404);
+    		}
+    	
+			
 		} catch (IOException e) {
 			e.printStackTrace();
+			try {
+				response.sendError(404);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		}
     }
     

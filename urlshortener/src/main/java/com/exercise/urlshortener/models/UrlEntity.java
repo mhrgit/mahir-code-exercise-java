@@ -7,7 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Table;
 
-@Entity(name = "url")
+@Entity(name = "urls")
 @Table(name = "urls")
 public class UrlEntity {
 
@@ -16,10 +16,10 @@ public class UrlEntity {
 	@Column(name = "id")
     private Long id;
 
-    @Column(name = "longurl")
+    @Column(name = "longUrl")
     private String longUrl;
 
-    @Column(name = "shorturl")
+    @Column(name = "shortUrl")
     private String shortUrl;
 
     public UrlEntity() {
@@ -27,6 +27,11 @@ public class UrlEntity {
 
     public UrlEntity(Long id, String longUrl, String shortUrl) {
         this.id = id;
+        this.longUrl = longUrl;
+        this.shortUrl = shortUrl;
+    }
+    
+    public UrlEntity(String longUrl, String shortUrl) {
         this.longUrl = longUrl;
         this.shortUrl = shortUrl;
     }
