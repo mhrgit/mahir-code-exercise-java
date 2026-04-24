@@ -35,6 +35,10 @@ public class UrlEntity {
         this.longUrl = longUrl;
         this.shortUrl = shortUrl;
     }
+    
+    public UrlEntity(String longUrl) {
+        this.longUrl = longUrl;
+    }
 
     public Long getId() {
         return id;
@@ -44,11 +48,11 @@ public class UrlEntity {
         this.id = id;
     }
 
-    public String getFullUrl() {
+    public String getLongUrl() {
         return longUrl;
     }
 
-    public void setFullUrl(String longUrl) {
+    public void setLongUrl(String longUrl) {
         this.longUrl = longUrl;
     }
 

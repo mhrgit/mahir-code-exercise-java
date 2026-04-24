@@ -1,8 +1,8 @@
 package com.exercise.urlshortener.controllers;
 
 import java.io.IOException;
+import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.exercise.urlshortener.models.ShortenResult;
 import com.exercise.urlshortener.models.Url;
+import com.exercise.urlshortener.models.UrlEntity;
 import com.exercise.urlshortener.services.UrlOperationsService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,6 +33,7 @@ public class UrlOperationsController {
     @PostMapping("/shorten")
     public ResponseEntity<Object> createShortUrl(@RequestBody Url url, HttpServletRequest request) {
     	
+    	// When custom alias provided
     	if(!url.getCustomAlias().isEmpty()) {
     		
     		ShortenResult result = service.getShortUrl(url);
@@ -48,6 +50,7 @@ public class UrlOperationsController {
     	
     	}
     	
+    	// When custom alias not provided
     	ShortenResult result = service.getShortUrl(url.getFullUrl());
 
     	if(result.isSuccessfull()) {
@@ -70,8 +73,10 @@ public class UrlOperationsController {
     		
     		if(longUrl != null && !longUrl.isEmpty()) {
     			response.setStatus(302);
+    			response.setHeader("description", " Redirect to the original URL");
     			response.sendRedirect(longUrl);
     		} else {
+    			response.setHeader("description", "Alias not found");
     			response.sendError(404);
     		}
     	
@@ -79,7 +84,8 @@ public class UrlOperationsController {
 		} catch (IOException e) {
 			e.printStackTrace();
 			try {
-				response.sendError(404);
+    			response.setHeader("description", "Error occured. Alias not found");
+    			response.sendError(404);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
@@ -87,12 +93,23 @@ public class UrlOperationsController {
     }
     
     @DeleteMapping("/{alias}")
-    public void deleteUrl(@PathVariable String shortenString) {
-    		//TODO: Get long url and perform redirection
+    public ResponseEntity<Object> deleteUrl(@PathVariable String shortenString) {
+    	boolean isDeleteSuccessfull = service.deleteShortUrl(shortenString);
+    	
+    	if(isDeleteSuccessfull) {
+			return ResponseEntity.status(204)
+					.header("description", "Successfully deleted").body(null);
+    	} else {
+			return ResponseEntity.status(404)
+					.header("description", "Alias not found").body(null);
+    	}
+    	
     }
     
     @GetMapping("/urls")
-    public void getAllUrls(HttpServletResponse response, @PathVariable String shortenString) {
-    		//TODO: Get long url and perform redirection
+    public ResponseEntity<List<UrlEntity>> getAllUrls(HttpServletResponse response, @PathVariable String shortenString) {
+		List<UrlEntity> urls = service.getAllUrls();
+    	return ResponseEntity.status(204)
+				.header("description", "Successfully deleted").body(urls);
     }
 }

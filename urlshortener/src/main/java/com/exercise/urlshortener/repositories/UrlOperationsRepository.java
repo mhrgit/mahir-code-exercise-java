@@ -15,4 +15,7 @@ public interface UrlOperationsRepository extends JpaRepository<UrlEntity, Long> 
 	
 	@Query(value = "SELECT longUrl FROM urls u WHERE u.shortUrl = :shortUrl")
 	String getLongUrl(String shortUrl);
+	
+	@Query(value = "SELECT id FROM urls u WHERE u.shortUrl = :shortUrl")
+	long getUrlIdByShortUrl(String shortUrl);
 }

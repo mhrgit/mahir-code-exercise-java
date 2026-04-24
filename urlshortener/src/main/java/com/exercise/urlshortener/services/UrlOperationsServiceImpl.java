@@ -9,7 +9,7 @@ import com.exercise.urlshortener.models.ShortenResult;
 import com.exercise.urlshortener.models.Url;
 import com.exercise.urlshortener.models.UrlEntity;
 import com.exercise.urlshortener.repositories.UrlOperationsRepository;
-import com.exercise.utils.UrlUtils;
+import com.exercise.urlshortener.utils.UrlUtils;
 
 @Service
 public class UrlOperationsServiceImpl implements UrlOperationsService {
@@ -28,10 +28,16 @@ public class UrlOperationsServiceImpl implements UrlOperationsService {
        
         if (!longUrlExists) {
         	
-        	String shortUrl = UrlUtils.generateShortUrl(longUrl);
+        	UrlEntity newUrl = new UrlEntity(longUrl);
+        	UrlEntity savedNewUrl = repository.save(newUrl);
         	
-        	UrlEntity newUrl = new UrlEntity(longUrl, shortUrl);
-        	repository.save(newUrl);
+        	// Unique identifier is ID field in database that is converted to base62
+        	String shortUrl = UrlUtils.generateShortUrl(savedNewUrl.getId());
+        	
+        	savedNewUrl.setShortUrl(shortUrl);
+        	
+        	repository.save(savedNewUrl);
+        	
         	return new ShortenResult(true, shortUrl);
         }
         else {
@@ -39,6 +45,7 @@ public class UrlOperationsServiceImpl implements UrlOperationsService {
         }
 	}
 	
+	// Use this method when custom alias provided
 	@Override
 	public ShortenResult getShortUrl(Url url) {
 		boolean longUrlExists = repository.checkLongUrlExists(url.getFullUrl());
@@ -57,18 +64,26 @@ public class UrlOperationsServiceImpl implements UrlOperationsService {
 	@Override
 	public String getLongUrl(String shortUrl) {
 		
-		return repository.getLongUrl(shortUrl);
+		long urlId = repository.getUrlIdByShortUrl(shortUrl);
+		UrlEntity urlEntity = repository.findById(urlId).orElseGet(null);
+		
+		return urlEntity.getLongUrl();
 	}
 
 	@Override
-	public boolean deleteShortUrl(String url) {
-		//TODO: check if url exists and then delete
-		return false;
+	public boolean deleteShortUrl(String shortUrl) {
+		try {
+			long id = repository.getUrlIdByShortUrl(shortUrl);
+			repository.deleteById(id);
+			return true;
+		} catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	@Override
 	public List<UrlEntity> getAllUrls() {
-		//TODO: implement get all urls method in repo
-		return null;
+		return repository.findAll();
 	}
 }
