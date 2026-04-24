@@ -5,4 +5,5 @@ target/
 /bin/
 .DS_Store
 .metadata/
-/urlshortener/src/main/resources/*
+urlshortener/src/main/resources/
+urlshortener/web-client/node_modules/

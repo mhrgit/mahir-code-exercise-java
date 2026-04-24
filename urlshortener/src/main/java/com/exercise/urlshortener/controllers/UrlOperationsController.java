@@ -93,7 +93,7 @@ public class UrlOperationsController {
     }
     
     @DeleteMapping("/{alias}")
-    public ResponseEntity<Object> deleteUrl(@PathVariable String shortenString) {
+    public ResponseEntity<Object> deleteUrl(@PathVariable("alias") String shortenString) {
     	boolean isDeleteSuccessfull = service.deleteShortUrl(shortenString);
     	
     	if(isDeleteSuccessfull) {
