@@ -21,7 +21,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping("/urls")
+@RequestMapping("/api/urls")
 public class UrlOperationsController {
 
 	private UrlOperationsService service;
@@ -107,9 +107,9 @@ public class UrlOperationsController {
     }
     
     @GetMapping("/urls")
-    public ResponseEntity<List<UrlEntity>> getAllUrls(HttpServletResponse response, @PathVariable String shortenString) {
+    public ResponseEntity<List<UrlEntity>> getAllUrls() {
 		List<UrlEntity> urls = service.getAllUrls();
-    	return ResponseEntity.status(204)
+    	return ResponseEntity.status(200)
 				.header("description", "Successfully deleted").body(urls);
     }
 }

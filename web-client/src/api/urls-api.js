@@ -3,7 +3,7 @@ import { BASE_API_URL } from '../constants/url-constants';
 
 export const getAllUrls = createAsyncThunk(
     'urls/get-all-urls', async thunkAPI => {
-        const endPoint = `${BASE_API_URL}/urls/urls`;
+        const endPoint = `api/urls/urls`;
 
         try {
             const response = await fetch(
