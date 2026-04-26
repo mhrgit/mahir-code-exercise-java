@@ -27,3 +27,29 @@ export const getAllUrls = createAsyncThunk(
         }
     }
 );
+
+export const deleteUrl = createAsyncThunk(
+    'urls/delete-url', async ({ alias }, thunkAPI) => {
+        const endPoint = `api/urls/${alias}`;
+
+        try {
+            const response = await fetch(
+                endPoint,
+                {
+                    method: 'DELETE',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+            if (response.status === 204 || response.headers.get('content-length') === '0' || response.statusText === 'No Content') {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (e) {
+            thunkAPI.rejectWithValue(e.response.data);
+        }
+    }
+);

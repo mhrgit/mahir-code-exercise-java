@@ -98,10 +98,10 @@ public class UrlOperationsController {
     	
     	if(isDeleteSuccessfull) {
 			return ResponseEntity.status(204)
-					.header("description", "Successfully deleted").body(null);
+					.header("description", "Successfully deleted").build();
     	} else {
 			return ResponseEntity.status(404)
-					.header("description", "Alias not found").body(null);
+					.header("description", "Alias not found").build();
     	}
     	
     }
