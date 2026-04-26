@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getAllUrls, deleteUrl } from '../api/urls-api';
+import { getAllUrls, deleteUrl, createNewAlias, } from '../api/urls-api';
 
 const urlsSlice = createSlice({
 
@@ -12,6 +12,10 @@ const urlsSlice = createSlice({
         isDeleteUrlFail: false,
         isDeleteUrlPending: false,
         allUrls: [],
+        isCreaeteNewAliasSuccess: false,
+        isCreaeteNewAliasFail: false,
+        isCreaeteNewAliasPending: false,
+        newAlias: '',
     },
 
     reducers: {
@@ -26,6 +30,14 @@ const urlsSlice = createSlice({
             state.isDeleteUrlSuccess = false;
             state.isDeleteUrlFail = false;
             state.isDeleteUrlPending = false;
+            return state;
+        },
+
+        clearCreateNewAliasState: (state) => {
+            state.isCreaeteNewAliasSuccess = false;
+            state.isCreaeteNewAliasFail = false;
+            state.isCreaeteNewAliasPending = false;
+            state.newAlias = '';
             return state;
         }
     },
@@ -55,7 +67,7 @@ const urlsSlice = createSlice({
 
         builder.addCase(deleteUrl.fulfilled, (state, action) => {
             state.isDeleteUrlSuccess = action.payload;
-            state.isDeleteUrlFail =  !action.payload;
+            state.isDeleteUrlFail = !action.payload;
             state.isDeleteUrlPending = false;
             return state;
         });
@@ -71,9 +83,31 @@ const urlsSlice = createSlice({
             state.isDeleteUrlPending = true;
             return state;
         });
+
+        builder.addCase(createNewAlias.fulfilled, (state, action) => {
+            state.isCreaeteNewAliasSuccess = action.payload.isSuccess;
+            state.isCreaeteNewAliasFail = !action.payload.isSuccess;
+            state.isCreaeteNewAliasPending = false;
+            state.newAlias = action.payload.shortUrl;
+            return state;
+        });
+        builder.addCase(createNewAlias.rejected, (state, action) => {
+            state.isCreaeteNewAliasSuccess = false;
+            state.isCreaeteNewAliasFail = true;
+            state.isCreaeteNewAliasPending = false;
+            state.newAlias = '';
+            return state;
+        });
+        builder.addCase(createNewAlias.pending, (state, action) => {
+            state.isCreaeteNewAliasSuccess = false;
+            state.isCreaeteNewAliasFail = false;
+            state.isCreaeteNewAliasPending = true;
+            state.newAlias = '';
+            return state;
+        });
     },
 });
 
-export const { clearGetAllUrlsState, clearDeleteUrlState } = urlsSlice.actions;
+export const { clearGetAllUrlsState, clearDeleteUrlState, clearCreateNewAliasState } = urlsSlice.actions;
 export default urlsSlice.reducer;
 export const urlsSelector = (state) => state.urls;

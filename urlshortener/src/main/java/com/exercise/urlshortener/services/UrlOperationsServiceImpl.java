@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.exercise.urlshortener.models.ShortenResult;
 import com.exercise.urlshortener.models.Url;
 import com.exercise.urlshortener.models.UrlEntity;
+import com.exercise.urlshortener.models.UrlResponse;
 import com.exercise.urlshortener.repositories.UrlOperationsRepository;
 import com.exercise.urlshortener.utils.UrlUtils;
 
@@ -22,7 +23,7 @@ public class UrlOperationsServiceImpl implements UrlOperationsService {
 	}
 
 	@Override
-	public ShortenResult getShortUrl(String longUrl) {
+	public ShortenResult createShortUrl(String longUrl) {
 	
 		boolean longUrlExists = repository.checkLongUrlExists(longUrl);
        
@@ -34,37 +35,38 @@ public class UrlOperationsServiceImpl implements UrlOperationsService {
         	// Unique identifier is ID field in database that is converted to base62
         	String shortUrl = UrlUtils.generateShortUrl(savedNewUrl.getId());
         	
-        	savedNewUrl.setShortUrl(shortUrl);
+        	savedNewUrl.setShortUrl("http://localhost:8080/api/urls/" + shortUrl);
         	
         	repository.save(savedNewUrl);
         	
-        	return new ShortenResult(true, shortUrl);
+        	return new ShortenResult(true, new UrlResponse(shortUrl));
         }
         else {
-        	return new ShortenResult(false, "Invalid input or alias already taken");
+        	return new ShortenResult(false, new UrlResponse("Invalid input or alias already taken"));
         }
 	}
 	
 	// Use this method when custom alias provided
 	@Override
-	public ShortenResult getShortUrl(Url url) {
-		boolean longUrlExists = repository.checkLongUrlExists(url.getFullUrl());
+	public ShortenResult createShortUrl(Url url) {
+		boolean longUrlExists = repository.checkLongUrlExists(url.getLongUrl());
+		boolean shortUrlExits = repository.checkShortUrlExists(url.getCustomAlias());
 	       
-        if (!longUrlExists) {
+        if (!longUrlExists && !shortUrlExits) {
         	
-        	UrlEntity newUrl = new UrlEntity(url.getFullUrl(), url.getCustomAlias());
+        	UrlEntity newUrl = new UrlEntity(url.getLongUrl(), "http://localhost:8080/api/urls/" + url.getCustomAlias());
         	repository.save(newUrl);
-        	return new ShortenResult(true, url.getCustomAlias());
+        	return new ShortenResult(true, new UrlResponse(url.getCustomAlias()));
         }
         else {
-        	return new ShortenResult(false, "Invalid input or alias already taken");
+        	return new ShortenResult(false, new UrlResponse("Invalid input or alias already taken"));
         }
 	}
 
 	@Override
 	public String getLongUrl(String shortUrl) {
 		
-		long urlId = repository.getUrlIdByShortUrl(shortUrl);
+		long urlId = repository.getUrlIdByShortUrl("http://localhost:8080/api/urls/" + shortUrl);
 		UrlEntity urlEntity = repository.findById(urlId).orElseGet(null);
 		
 		return urlEntity.getLongUrl();

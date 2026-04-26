@@ -13,6 +13,9 @@ public interface UrlOperationsRepository extends JpaRepository<UrlEntity, Long> 
 	@Query(value = "SELECT COUNT(*) > 0 FROM urls u WHERE u.longUrl = :longUrl")
 	boolean checkLongUrlExists(@Param("longUrl") String longUrl);
 	
+	@Query(value = "SELECT COUNT(*) > 0 FROM urls u WHERE u.shortUrl = :shortUrl")
+	boolean checkShortUrlExists(@Param("shortUrl") String shortUrl);
+	
 	@Query(value = "SELECT longUrl FROM urls u WHERE u.shortUrl = :shortUrl")
 	String getLongUrl(String shortUrl);
 	

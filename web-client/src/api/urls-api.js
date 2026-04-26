@@ -53,3 +53,38 @@ export const deleteUrl = createAsyncThunk(
         }
     }
 );
+
+export const createNewAlias = createAsyncThunk(
+    'urls/create-new-alias',
+    async (newAlias, thunkAPI) => {
+        const endPoint = `api/urls/shorten`;
+
+        try {
+            const response = await fetch(
+                endPoint,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        longUrl: newAlias.longUrl,
+                        customAlias: newAlias.shortUrl,
+                    }),
+                }
+            );
+            let data = await response.json();
+            if (response.status === 201) {
+                return { isSuccess: true, shortUrl: data.shortUrl };
+
+            } if (response.status === 400) {
+                return { isSuccess: false, shortUrl: '' };
+            } else {
+                return thunkAPI.rejectWithValue(data);
+            }
+        } catch (e) {
+            thunkAPI.rejectWithValue(e.response.data);
+        }
+    }
+);

@@ -34,9 +34,9 @@ public class UrlOperationsController {
     public ResponseEntity<Object> createShortUrl(@RequestBody Url url, HttpServletRequest request) {
     	
     	// When custom alias provided
-    	if(!url.getCustomAlias().isEmpty()) {
+    	if(url.getCustomAlias() != null && !url.getCustomAlias().isEmpty()) {
     		
-    		ShortenResult result = service.getShortUrl(url);
+    		ShortenResult result = service.createShortUrl(url);
     		
     		if(result.isSuccessfull()) {
     			return ResponseEntity.status(201)
@@ -51,7 +51,7 @@ public class UrlOperationsController {
     	}
     	
     	// When custom alias not provided
-    	ShortenResult result = service.getShortUrl(url.getFullUrl());
+    	ShortenResult result = service.createShortUrl(url.getLongUrl());
 
     	if(result.isSuccessfull()) {
 			return ResponseEntity.status(201)
@@ -65,11 +65,11 @@ public class UrlOperationsController {
     }
 
     @GetMapping("/{alias}")
-    public void redirectToLongUrl(HttpServletResponse response, @PathVariable String shortUrl) {
+    public void redirectToLongUrl(HttpServletResponse response, @PathVariable String alias) {
     	
     	try {
     		
-    		String longUrl = service.getLongUrl(shortUrl);
+    		String longUrl = service.getLongUrl(alias);
     		
     		if(longUrl != null && !longUrl.isEmpty()) {
     			response.setStatus(302);
@@ -92,8 +92,11 @@ public class UrlOperationsController {
 		}
     }
     
-    @DeleteMapping("/{alias}")
-    public ResponseEntity<Object> deleteUrl(@PathVariable("alias") String shortenString) {
+    @DeleteMapping("/**")
+    public ResponseEntity<Object> deleteUrl(HttpServletRequest request) {
+    	String shortenString = request.getRequestURI()
+    	        .substring(request.getRequestURI().indexOf("/urls/") + 6);
+    	
     	boolean isDeleteSuccessfull = service.deleteShortUrl(shortenString);
     	
     	if(isDeleteSuccessfull) {

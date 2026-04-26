@@ -8,8 +8,8 @@ import com.exercise.urlshortener.models.UrlEntity;
 
 public interface UrlOperationsService {
 
-	ShortenResult getShortUrl(String longUrl);
-	ShortenResult getShortUrl(Url url);
+	ShortenResult createShortUrl(String longUrl);
+	ShortenResult createShortUrl(Url url);
 	String getLongUrl(String shortUrl);
 	boolean deleteShortUrl(String url);
 	List<UrlEntity> getAllUrls();

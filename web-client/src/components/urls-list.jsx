@@ -95,13 +95,12 @@ const UrlsList = () => {
             {!isLoading && isGetAllUrlsSuccess &&
                 <div>
                     <h2 className="h2-lefAlign">Urls List</h2>
-
+                    {deleteSucccess &&
+                        <h3 className='error-message'>Selected URL has been deleted..</h3>
+                    }
                     {allUrls && allUrls.length > 0 &&
                         <>
                             <Table columns={columns} dataSource={allUrls} pagination={{ pageSize: 50 }} />
-                            {deleteSucccess &&
-                                <h3 className='error-message'>Selected URL has been deleted..</h3>
-                            }
                         </>
                     }
 

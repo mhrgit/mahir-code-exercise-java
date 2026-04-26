@@ -56,6 +56,7 @@
   padding: 20px;
   width: 60%;
   margin-left: 75px;
+  margin-bottom: 100px;
 }
 
 .div-leff-align {
@@ -88,4 +89,18 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
+}
+
+.alias-success {
+  color: rgb(18, 18, 197);
+}
+
+.alias-fail {
+  color: rgb(101, 8, 34);
+}
+
+.error-label {
+  color: red;
+  font-size: 14px;
+  align-items: flex-start;
 }

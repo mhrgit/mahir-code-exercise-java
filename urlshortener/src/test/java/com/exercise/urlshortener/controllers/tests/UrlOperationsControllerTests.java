@@ -22,6 +22,7 @@ import com.exercise.urlshortener.controllers.UrlOperationsController;
 import com.exercise.urlshortener.models.ShortenResult;
 import com.exercise.urlshortener.models.Url;
 import com.exercise.urlshortener.models.UrlEntity;
+import com.exercise.urlshortener.models.UrlResponse;
 import com.exercise.urlshortener.services.UrlOperationsService;
 
 import tools.jackson.databind.ObjectMapper;
@@ -42,8 +43,8 @@ public class UrlOperationsControllerTests {
     void testCreateShortUrl_withoutAlias_success() throws Exception {
     	UrlEntity url = new UrlEntity("https://example.com", "");
 
-        when(service.getShortUrl(url.getLongUrl()))
-                .thenReturn(new ShortenResult(true, "abc123"));
+        when(service.createShortUrl(url.getLongUrl()))
+                .thenReturn(new ShortenResult(true, new UrlResponse("abc123")));
 
         mockMvc.perform(post("/urls/shorten")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -57,8 +58,8 @@ public class UrlOperationsControllerTests {
     void testCreateShortUrl_withAlias_success() throws Exception {
     	UrlEntity url = new UrlEntity("https://example.com", "custom");
 
-        when(service.getShortUrl(any(Url.class)))
-                .thenReturn(new ShortenResult(true, "custom"));
+        when(service.createShortUrl(any(Url.class)))
+                .thenReturn(new ShortenResult(true, new UrlResponse("custom")));
 
         mockMvc.perform(post("/urls/shorten")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -71,8 +72,8 @@ public class UrlOperationsControllerTests {
     void testCreateShortUrl_failure() throws Exception {
     	UrlEntity url = new UrlEntity("https://example.com", "");
 
-        when(service.getShortUrl(url.getLongUrl()))
-                .thenReturn(new ShortenResult(false, "error"));
+        when(service.createShortUrl(url.getLongUrl()))
+                .thenReturn(new ShortenResult(false, new UrlResponse("error")));
 
         mockMvc.perform(post("/urls/shorten")
                 .contentType(MediaType.APPLICATION_JSON)

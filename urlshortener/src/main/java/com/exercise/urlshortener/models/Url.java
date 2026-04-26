@@ -3,15 +3,15 @@ import jakarta.validation.constraints.NotBlank;
 
 public class Url {
 	
-	@NotBlank(message = "Full URL cannot be empty")
-	private String fullUrl;
+	@NotBlank(message = "Long URL cannot be empty")
+	private String longUrl;
 	private String customAlias;
 	
-	public String getFullUrl() {
-		return fullUrl;
+	public String getLongUrl() {
+		return longUrl;
 	}
-	public void setFullUrl(String fullUrl) {
-		this.fullUrl = fullUrl;
+	public void setLongUrl(String longUrl) {
+		this.longUrl = longUrl;
 	}
 	public String getCustomAlias() {
 		return customAlias;
