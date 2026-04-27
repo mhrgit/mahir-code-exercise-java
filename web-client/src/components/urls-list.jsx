@@ -47,6 +47,12 @@ const UrlsList = () => {
 
     const columns = [
         {
+            title: '',
+            dataIndex: 'index',
+            key: 'index',
+            render: (text, record, index) => index + 1,
+        },
+        {
             title: () => { return <h3 style={{ color: 'navy', }}>Long Url</h3> },
             dataIndex: 'longUrl',
             key: 'longUrl',

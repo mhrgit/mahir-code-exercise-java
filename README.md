@@ -1,5 +1,15 @@
 # URL Shortener Coding Exercise
 
+## How to run
+
+- Navigate to urlshortener directory
+- Run  mvn -Dmaven.test.skip=true install
+- Navigate to web-client directory
+- Run npm run build
+- Navigate to main directory
+- Run docker-compose up --build
+- App should be up and running on http:localhost:80/
+
 ## Task
 
 Build a simple **URL shortener** in a **preferably JVM-based language** (e.g. Java, Kotlin).
@@ -42,3 +52,14 @@ It should:
   - How to build and run locally.
   - Example usage (frontend and API).
   - Any notes or assumptions.
+
+
+  ## How to run
+
+- Navigate to urlshortener directory
+- Run  mvn -Dmaven.test.skip=true install
+- Navigate to web-client directory
+- Run npm run build
+- Navigate to main directory
+- Run docker-compose up --build
+- App should be up and running on http:localhost:80/

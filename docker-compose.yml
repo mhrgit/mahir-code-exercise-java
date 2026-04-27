@@ -1,0 +1,11 @@
+services:
+  backend:
+    build: ./urlshortener
+    ports:
+      - "8080:8080"
+  frontend:
+    build: ./web-client
+    ports:
+      - "80:80"
+    depends_on:
+      - backend

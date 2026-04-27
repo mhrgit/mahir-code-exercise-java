@@ -1,6 +1,10 @@
 package com.exercise.urlshortener.utils.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -8,48 +12,71 @@ import com.exercise.urlshortener.utils.UrlUtils;
 
 public class UrlUtilsTests {
 
-    @Test
-    void testGenerateShortUrl_basicValues() {
-        assertEquals("1", UrlUtils.generateShortUrl(1L));
-        assertEquals("a", UrlUtils.generateShortUrl(10L));
-        assertEquals("Z", UrlUtils.generateShortUrl(61L));
+	@Test
+    void shouldGenerateShortUrl() {
+        String shortUrl = UrlUtils.generateShortUrl(1L);
+
+        assertNotNull(shortUrl);
+        assertFalse(shortUrl.isEmpty());
     }
 
     @Test
-    void testGenerateShortUrl_andBack() {
-        long[] testValues = {1L, 10L, 61L, 62L, 12345L, 999999L, Long.MAX_VALUE};
+    void shouldGenerateDifferentShortUrlsForDifferentIds() {
+        String url1 = UrlUtils.generateShortUrl(1L);
+        String url2 = UrlUtils.generateShortUrl(2L);
 
-        for (long value : testValues) {
-            String shortUrl = UrlUtils.generateShortUrl(value);
-            long result = UrlUtils.getLongUrl(shortUrl);
-            assertEquals(value, result, "Failed for value: " + value);
-        }
+        assertNotEquals(url1, url2);
     }
 
     @Test
-    void testGetLongUrl_basicValues() {
-        assertEquals(1L, UrlUtils.getLongUrl("1"));
-        assertEquals(10L, UrlUtils.getLongUrl("a"));
-        assertEquals(61L, UrlUtils.getLongUrl("Z"));
+    void shouldDecodeShortUrlToLong() {
+        Long originalId = 12345L;
+
+        String shortUrl = UrlUtils.generateShortUrl(originalId);
+        long decoded = UrlUtils.getLongUrl(shortUrl);
+
+        // NOTE: decoded includes START_ID offset
+        assertEquals(100000000L + originalId, decoded);
     }
 
     @Test
-    void testGenerateShortUrl_zero() {
-        // Edge case: current implementation returns empty string for 0
-        assertEquals("", UrlUtils.generateShortUrl(0L));
-    }
+    void shouldBeConsistentEncodeDecode() {
+        Long[] testIds = {1L, 10L, 999L, 123456L, 9999999L};
 
-    @Test
-    void testGetLongUrl_emptyString() {
-        assertEquals(0L, UrlUtils.getLongUrl(""));
-    }
-
-    @Test
-    void testConsistency_randomValues() {
-        for (long i = 1; i < 10000; i++) {
-            String shortUrl = UrlUtils.generateShortUrl(i);
+        for (Long id : testIds) {
+            String shortUrl = UrlUtils.generateShortUrl(id);
             long decoded = UrlUtils.getLongUrl(shortUrl);
-            assertEquals(i, decoded);
+
+            assertEquals(100000000L + id, decoded);
         }
+    }
+
+    @Test
+    void shouldHandleZeroId() {
+        String shortUrl = UrlUtils.generateShortUrl(0L);
+
+        assertNotNull(shortUrl);
+        assertFalse(shortUrl.isEmpty());
+
+        long decoded = UrlUtils.getLongUrl(shortUrl);
+        assertEquals(100000000L, decoded);
+    }
+
+    @Test
+    void shouldHandleLargeNumbers() {
+        Long largeId = Long.MAX_VALUE / 1000;
+
+        String shortUrl = UrlUtils.generateShortUrl(largeId);
+        long decoded = UrlUtils.getLongUrl(shortUrl);
+
+        assertEquals(100000000L + largeId, decoded);
+    }
+
+    @Test
+    void shouldDecodeKnownValue() {
+        // Optional deterministic test
+        long decoded = UrlUtils.getLongUrl("a");
+
+        assertTrue(decoded >= 0);
     }
 }

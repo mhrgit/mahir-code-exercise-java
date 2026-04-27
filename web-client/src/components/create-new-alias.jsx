@@ -6,6 +6,7 @@ import { createNewAlias } from '../api/urls-api';
 import { urlsSelector } from '../store/urls-reducer';
 import { Table, Space, Button } from 'antd';
 import { checkValidUrl } from '../utils/url-validator';
+import { ALIAS_LOCAL_BASE_URL } from '../constants/url-constants';
 
 const CreateNewAlias = () => {
 
@@ -98,7 +99,7 @@ const CreateNewAlias = () => {
                             className={'input-box'}
                         /><br />
                         {alias &&
-                            <p>Your alias: http://localhost:8080/api/urls/{alias}</p>
+                            <p>Your alias: {ALIAS_LOCAL_BASE_URL}{alias}</p>
                         }
                         {errorShortUrl &&
                             <label className="error-label">Short URL format is not valid.</label>
@@ -113,7 +114,7 @@ const CreateNewAlias = () => {
                     {newAlias &&
                         <div>
                             <h2>URL successfully shortened</h2>
-                            <h3 className='alias-success'>Alias http://localhost:8080/api/urls/{newAlias} has been created for {registeredLongUrl}</h3>
+                            <h3 className='alias-success'>Your new Alias: {ALIAS_LOCAL_BASE_URL}{newAlias}</h3>
                         </div>
                     }
 

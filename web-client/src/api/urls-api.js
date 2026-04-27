@@ -1,9 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { BASE_API_URL } from '../constants/url-constants';
+import { CURRENT_API_URL } from '../constants/url-constants';
 
 export const getAllUrls = createAsyncThunk(
     'urls/get-all-urls', async thunkAPI => {
-        const endPoint = `api/urls/urls`;
+        const endPoint = CURRENT_API_URL + `/api/urls/urls`;
 
         try {
             const response = await fetch(
@@ -30,7 +30,7 @@ export const getAllUrls = createAsyncThunk(
 
 export const deleteUrl = createAsyncThunk(
     'urls/delete-url', async ({ alias }, thunkAPI) => {
-        const endPoint = `api/urls/${alias}`;
+        const endPoint = CURRENT_API_URL + `/api/urls/${alias}`;
 
         try {
             const response = await fetch(
@@ -57,7 +57,7 @@ export const deleteUrl = createAsyncThunk(
 export const createNewAlias = createAsyncThunk(
     'urls/create-new-alias',
     async (newAlias, thunkAPI) => {
-        const endPoint = `api/urls/shorten`;
+        const endPoint = CURRENT_API_URL + `/api/urls/shorten`;
 
         try {
             const response = await fetch(

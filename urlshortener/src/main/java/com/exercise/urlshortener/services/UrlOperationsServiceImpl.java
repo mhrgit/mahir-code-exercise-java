@@ -3,6 +3,7 @@ package com.exercise.urlshortener.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.exercise.urlshortener.models.ShortenResult;
@@ -16,6 +17,9 @@ import com.exercise.urlshortener.utils.UrlUtils;
 public class UrlOperationsServiceImpl implements UrlOperationsService {
 	
 	private UrlOperationsRepository repository;
+	
+	@Value("${urlshortener.app.url.base}")
+	private String urlBase;
 	
 	@Autowired
 	public UrlOperationsServiceImpl(UrlOperationsRepository repository) {
@@ -35,7 +39,7 @@ public class UrlOperationsServiceImpl implements UrlOperationsService {
         	// Unique identifier is ID field in database that is converted to base62
         	String shortUrl = UrlUtils.generateShortUrl(savedNewUrl.getId());
         	
-        	savedNewUrl.setShortUrl("http://localhost:8080/api/urls/" + shortUrl);
+        	savedNewUrl.setShortUrl(urlBase + shortUrl);
         	
         	repository.save(savedNewUrl);
         	
@@ -54,7 +58,7 @@ public class UrlOperationsServiceImpl implements UrlOperationsService {
 	       
         if (!longUrlExists && !shortUrlExits) {
         	
-        	UrlEntity newUrl = new UrlEntity(url.getLongUrl(), "http://localhost:8080/api/urls/" + url.getCustomAlias());
+        	UrlEntity newUrl = new UrlEntity(url.getLongUrl(), urlBase + url.getCustomAlias());
         	repository.save(newUrl);
         	return new ShortenResult(true, new UrlResponse(url.getCustomAlias()));
         }
@@ -65,11 +69,15 @@ public class UrlOperationsServiceImpl implements UrlOperationsService {
 
 	@Override
 	public String getLongUrl(String shortUrl) {
-		
-		long urlId = repository.getUrlIdByShortUrl("http://localhost:8080/api/urls/" + shortUrl);
-		UrlEntity urlEntity = repository.findById(urlId).orElseGet(null);
-		
-		return urlEntity.getLongUrl();
+		try {
+			long urlId = repository.getUrlIdByShortUrl(urlBase + shortUrl);
+			UrlEntity urlEntity = repository.findById(urlId).orElseGet(null);
+			return urlEntity.getLongUrl();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			return "";
+		}
 	}
 
 	@Override
