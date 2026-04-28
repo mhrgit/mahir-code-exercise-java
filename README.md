@@ -5,6 +5,7 @@
 - Navigate to urlshortener directory
 - Run  mvn -Dmaven.test.skip=true install
 - Navigate to web-client directory
+- Run npm insall
 - Run npm run build
 - Navigate to main directory
 - Run docker-compose up --build
@@ -59,6 +60,7 @@ It should:
 - Navigate to urlshortener directory
 - Run  mvn -Dmaven.test.skip=true install
 - Navigate to web-client directory
+- Run npm insall
 - Run npm run build
 - Navigate to main directory
 - Run docker-compose up --build
