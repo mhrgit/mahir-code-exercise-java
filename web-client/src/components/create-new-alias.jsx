@@ -3,10 +3,11 @@ import Header from "../features/header";
 import { Oval } from 'react-loader-spinner';
 import { useSelector, useDispatch } from 'react-redux';
 import { createNewAlias } from '../api/urls-api';
-import { urlsSelector } from '../store/urls-reducer';
+import { urlsSelector, clearCreateNewAliasState } from '../store/urls-reducer';
 import { Table, Space, Button } from 'antd';
 import { checkValidUrl } from '../utils/url-validator';
 import { ALIAS_LOCAL_BASE_URL } from '../constants/url-constants';
+import CreateNewAliasResult from './create-new-alias-result';
 
 const CreateNewAlias = () => {
 
@@ -27,6 +28,8 @@ const CreateNewAlias = () => {
         const timer = setTimeout(() => {
             setIsLoading(false);
         }, 300);
+    
+        dispatch(clearCreateNewAliasState());
 
         return () => {
             clearTimeout(timer);
@@ -111,12 +114,7 @@ const CreateNewAlias = () => {
                         onClick={createAlias}>
                         Create Alias</button>
 
-                    {newAlias &&
-                        <div>
-                            <h2>URL successfully shortened</h2>
-                            <h3 className='alias-success'>Your new Alias: {ALIAS_LOCAL_BASE_URL}{newAlias}</h3>
-                        </div>
-                    }
+                    {newAlias && <CreateNewAliasResult alias={newAlias} /> }
 
                     {!isCreaeteNewAliasSuccess && !resetMessage &&
                         <h2 className='alias-fail'>Invalid input or alias already taken</h2>

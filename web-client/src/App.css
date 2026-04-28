@@ -104,3 +104,9 @@
   font-size: 14px;
   align-items: flex-start;
 }
+
+.div-center {
+  display: flex;
+  justify-content: center;
+  height: 100vh;          
+}

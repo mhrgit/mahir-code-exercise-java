@@ -19,7 +19,7 @@ public class UrlEntity {
     @Column(name = "longUrl")
     private String longUrl;
 
-    @Column(name = "shortUrl")
+    @Column(name = "shortUrl", unique = true)
     private String shortUrl;
 
     public UrlEntity() {

@@ -8,6 +8,7 @@ import { Table, Space, Button } from 'antd';
 import {
     DeleteOutlined,
 } from '@ant-design/icons';
+import DeleteAliasResult from './delete-alias-result';
 
 const UrlsList = () => {
     const [isLoading, setIsLoading] = useState(true);
@@ -22,11 +23,7 @@ const UrlsList = () => {
     useEffect(() => {
         const timer = setTimeout(() => {
             setIsLoading(false);
-        }, 300);
-
-        const timerDeleteSucccess = setTimeout(() => {
-            setShowDeleteSuccess(false);
-        }, 2000);
+        }, 800);
 
         if (isDeleteUrlSuccess) {
             dispatch(getAllUrls());
@@ -41,7 +38,6 @@ const UrlsList = () => {
 
         return () => {
             clearTimeout(timer);
-            clearTimeout(timerDeleteSucccess);
         }
     }, [isDeleteUrlSuccess]);
 
@@ -102,7 +98,7 @@ const UrlsList = () => {
                 <div>
                     <h2 className="h2-lefAlign">Urls List</h2>
                     {deleteSucccess &&
-                        <h3 className='error-message'>Selected URL has been deleted..</h3>
+                        <DeleteAliasResult />
                     }
                     {allUrls && allUrls.length > 0 &&
                         <>
@@ -120,7 +116,6 @@ const UrlsList = () => {
             {!isLoading && isGetAllUrlsFail &&
                 <div>
                     <h3>Error occured feching the URLs</h3>
-
                 </div>
             }
         </div>
