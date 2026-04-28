@@ -9,7 +9,7 @@
 - Run npm run build
 - Navigate to main directory
 - Run docker-compose up --build
-- App should be up and running on http:localhost:80/
+- App should be up and running on http:localhost:3000/
 
 ## Task
 
@@ -64,4 +64,4 @@ It should:
 - Run npm run build
 - Navigate to main directory
 - Run docker-compose up --build
-- App should be up and running on http:localhost:80/
+- App should be up and running on http:localhost:3000/
